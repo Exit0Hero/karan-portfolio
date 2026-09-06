@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/fonts/SpaceGrotesk-Variable.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Variable.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+  font-style: normal;
+}
+
+@theme inline {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-bg-dark: #07090e;
+  --color-bg-surface: #0f131c;
+  --color-bg-elevated: #181d2a;
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-medium: rgba(255, 255, 255, 0.15);
+  --color-accent-cyan: #00f2fe;
+  --color-accent-violet: #7000ff;
+  --color-text-main: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-signal-green: #10b981;
+
+  --color-light-bg: #f8fafc;
+  --color-light-surface: #ffffff;
+  --color-light-elevated: #f1f5f9;
+  --color-light-border: rgba(0, 0, 0, 0.08);
+  --color-light-text: #0f172a;
+  --color-light-muted: #64748b;
+}
+
+:root {
+  --bg: var(--color-bg-dark);
+  --bg-surface: var(--color-bg-surface);
+  --bg-elevated: var(--color-bg-elevated);
+  --border: var(--color-border-subtle);
+  --border-medium: var(--color-border-medium);
+  --accent: var(--color-accent-cyan);
+  --accent-secondary: var(--color-accent-violet);
+  --text: var(--color-text-main);
+  --text-muted: var(--color-text-muted);
+  --signal: var(--color-signal-green);
+  --glass-bg: rgba(15, 19, 28, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] {
+  --bg: var(--color-light-bg);
+  --bg-surface: var(--color-light-surface);
+  --bg-elevated: var(--color-light-elevated);
+  --border: var(--color-light-border);
+  --border-medium: rgba(0, 0, 0, 0.12);
+  --accent: #0891b2;
+  --accent-secondary: #6d28d9;
+  --text: var(--color-light-text);
+  --text-muted: var(--color-light-muted);
+  --signal: #059669;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--color-bg-dark);
+    --bg-surface: var(--color-bg-surface);
+    --bg-elevated: var(--color-bg-elevated);
+    --border: var(--color-border-subtle);
+    --border-medium: var(--color-border-medium);
+    --accent: var(--color-accent-cyan);
+    --accent-secondary: var(--color-accent-violet);
+    --text: var(--color-text-main);
+    --text-muted: var(--color-text-muted);
+    --signal: var(--color-signal-green);
+    --glass-bg: rgba(15, 19, 28, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.15), 0 0 60px rgba(0, 242, 254, 0.05);
+}
+
+.glow-violet {
+  box-shadow: 0 0 20px rgba(112, 0, 255, 0.15), 0 0 60px rgba(112, 0, 255, 0.05);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-medium) transparent;
+  }
+}
