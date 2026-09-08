@@ -3,124 +3,8 @@
 import { use } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-
-const CASE_STUDIES: Record<string, {
-  title: string;
-  tagline: string;
-  category: string;
-  color: string;
-  stack: string[];
-  problem: string;
-  hypothesis: string;
-  observations: string[];
-  constraints: string[];
-  architecture: { component: string; description: string }[];
-  experiments: { name: string; result: string; metric: string }[];
-  decisions: { decision: string; alternatives: string; rationale: string; tradeoff: string }[];
-  failures: string[];
-  results: string;
-  lessons: string[];
-  nextSteps: string[];
-}> = {
-  "schedulai": {
-    title: "SchedulAI",
-    tagline: "AI-powered scheduling engine",
-    category: "AI_OPTIMIZATION",
-    color: "#00f2fe",
-    stack: ["Python", "TensorFlow", "FastAPI", "PostgreSQL", "Redis"],
-    problem: "Manual scheduling causes 23% productivity loss in teams. Existing tools lack intelligent conflict resolution and cannot adapt to changing team dynamics.",
-    hypothesis: "An ML model trained on historical scheduling data can predict optimal time slots and resolve conflicts 3x faster than manual methods.",
-    observations: [
-      "Peak productivity occurs between 10am-12pm for 73% of developers",
-      "Meeting-free blocks > 2 hours increase deep work output by 40%",
-      "Cross-timezone teams have 2.5x more scheduling conflicts",
-    ],
-    constraints: [
-      "Must integrate with Google Calendar and Outlook",
-      "Response time < 500ms for scheduling queries",
-      "GDPR compliant data handling",
-    ],
-    architecture: [
-      { component: "FastAPI Gateway", description: "REST API handling scheduling requests with rate limiting" },
-      { component: "ML Predictor", description: "TensorFlow model for optimal slot prediction" },
-      { component: "Conflict Resolver", description: "Graph-based algorithm for multi-party scheduling" },
-      { component: "Cache Layer", description: "Redis for frequently accessed calendar data" },
-    ],
-    experiments: [
-      { name: "ML vs Rule-based", result: "ML reduced conflicts by 40%", metric: "40% fewer conflicts" },
-      { name: "Response Time", result: "p95 latency under 200ms", metric: "< 200ms p95" },
-      { name: "User Satisfaction", result: "NPS improved from 32 to 67", metric: "NPS +35" },
-    ],
-    decisions: [
-      { decision: "TensorFlow over PyTorch", alternatives: "PyTorch, ONNX Runtime", rationale: "Better production deployment tooling", tradeoff: "Less experimental flexibility" },
-      { decision: "PostgreSQL over MongoDB", alternatives: "MongoDB, DynamoDB", rationale: "Complex relational queries for scheduling", tradeoff: "Horizontal scaling more complex" },
-    ],
-    failures: [
-      "Initial CNN approach failed — scheduling is sequential, not spatial",
-      "Real-time sync via WebSockets caused race conditions — switched to polling",
-    ],
-    results: "40% reduction in scheduling conflicts, 15% improvement in team utilization, deployed to 200+ users.",
-    lessons: [
-      "Domain-specific ML outperforms generic models",
-      "Simple polling can be more reliable than WebSockets for non-critical updates",
-      "User feedback loops are essential for model retraining",
-    ],
-    nextSteps: [
-      "Natural language scheduling via chatbot interface",
-      "Multi-calendar federated learning",
-      "Predictive meeting duration estimation",
-    ],
-  },
-  "minibiz-erp": {
-    title: "MiniBiz ERP",
-    tagline: "Lightweight ERP for SMBs",
-    category: "WEB_PLATFORMS",
-    color: "#7000ff",
-    stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Stripe"],
-    problem: "Small businesses struggle with fragmented tools — separate apps for inventory, invoicing, and reporting. This creates data silos and 15+ hours/week of manual data entry.",
-    hypothesis: "A unified, lightweight ERP with real-time sync can reduce administrative overhead by 60% while maintaining data accuracy.",
-    observations: [
-      "Average SMB uses 5+ disconnected tools for operations",
-      "Manual data entry causes 12% error rate in financial records",
-      "Real-time inventory visibility reduces overstock by 30%",
-    ],
-    constraints: [
-      "Must handle 10,000+ SKUs per business",
-      "Sub-second page loads on mobile",
-      "PCI DSS compliant payment processing",
-    ],
-    architecture: [
-      { component: "Next.js Frontend", description: "SSR/SSG hybrid with optimistic UI updates" },
-      { component: "API Routes", description: "Serverless endpoints with rate limiting" },
-      { component: "Prisma ORM", description: "Type-safe database queries with migrations" },
-      { component: "Stripe Integration", description: "Automated invoicing and payment tracking" },
-    ],
-    experiments: [
-      { name: "SSR vs CSR", result: "SSR reduced initial load by 45%", metric: "45% faster FCP" },
-      { name: "Optimistic UI", result: "Perceived latency dropped to near-zero", metric: "~0ms perceived" },
-      { name: "Bundle Size", result: "Code splitting reduced initial bundle by 60%", metric: "-60% bundle" },
-    ],
-    decisions: [
-      { decision: "Next.js over Remix", alternatives: "Remix, SvelteKit", rationale: "Larger ecosystem, better Vercel integration", tradeoff: "Slightly larger bundle" },
-      { decision: "Prisma over Drizzle", alternatives: "Drizzle, Kysely", rationale: "Better DX with schema-first approach", tradeoff: "Runtime overhead" },
-    ],
-    failures: [
-      "Initial monolithic component structure caused 3s page loads — refactored to feature-based splitting",
-      "Real-time inventory sync via polling hammered the DB — switched to change data capture",
-    ],
-    results: "Unified platform serving 50+ businesses, 60% faster invoice processing, 99.9% uptime.",
-    lessons: [
-      "Feature-based code splitting is non-negotiable for ERPs",
-      "Optimistic UI is essential for perceived performance",
-      "Change data capture scales better than polling for real-time features",
-    ],
-    nextSteps: [
-      "Multi-tenant architecture for SaaS model",
-      "AI-powered expense categorization",
-      "Mobile app with barcode scanning",
-    ],
-  },
-};
+import { PROJECTS } from "@/data/content";
+import { Reveal } from "@/animations/reveal";
 
 function ArchitecturalDiagram({ components, color }: { components: { component: string; description: string }[]; color: string }) {
   return (
@@ -166,9 +50,41 @@ function ArchitecturalDiagram({ components, color }: { components: { component: 
   );
 }
 
+function WorkflowDiagram({ steps, color }: { steps: string[]; color: string }) {
+  return (
+    <div className="flex flex-col gap-2">
+      {steps.map((step, i) => (
+        <motion.div
+          key={i}
+          className="flex items-center gap-3"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.08 }}
+        >
+          <div
+            className="h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-mono text-xs"
+            style={{ backgroundColor: `${color}15`, color }}
+          >
+            {i + 1}
+          </div>
+          <div className="flex-1 text-sm" style={{ color: "var(--text-muted)" }}>
+            {step}
+          </div>
+          {i < steps.length - 1 && (
+            <svg className="h-4 w-4 shrink-0" style={{ color: `${color}60` }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          )}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 export default function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const study = CASE_STUDIES[slug];
+  const study = PROJECTS.find((p) => p.slug === slug);
 
   if (!study) {
     return (
@@ -178,7 +94,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ slug: stri
             Case Study Coming Soon
           </h1>
           <p className="mb-8" style={{ color: "var(--text-muted)" }}>
-            This case study is being documented with full scientific rigor.
+            This case study is being documented.
           </p>
           <Link
             href="/projects"
@@ -192,11 +108,15 @@ export default function CaseStudyPage({ params }: { params: Promise<{ slug: stri
     );
   }
 
+  const currentIndex = PROJECTS.findIndex((p) => p.slug === slug);
+  const prevProject = currentIndex > 0 ? PROJECTS[currentIndex - 1] : null;
+  const nextProject = currentIndex < PROJECTS.length - 1 ? PROJECTS[currentIndex + 1] : null;
+
   return (
     <div className="min-h-screen px-6 py-32">
       <div className="mx-auto max-w-4xl">
         {/* Back link */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+        <Reveal>
           <Link
             href="/projects"
             className="inline-flex items-center gap-2 text-sm mb-12 transition-colors hover:opacity-100"
@@ -207,282 +127,268 @@ export default function CaseStudyPage({ params }: { params: Promise<{ slug: stri
             </svg>
             All Projects
           </Link>
-        </motion.div>
+        </Reveal>
 
         {/* Header */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <span
-            className="font-mono text-xs tracking-widest uppercase px-3 py-1 rounded-full inline-block mb-4"
-            style={{
-              backgroundColor: `${study.color}15`,
-              color: study.color,
-              border: `1px solid ${study.color}30`,
-            }}
-          >
-            {study.category.replace("_", " & ")}
-          </span>
-          <h1
-            className="font-display text-4xl font-bold tracking-tight md:text-6xl"
-            style={{ color: "var(--text)" }}
-          >
-            {study.title}
-          </h1>
-          <p className="mt-4 text-xl" style={{ color: "var(--text-muted)" }}>
-            {study.tagline}
-          </p>
-          <div className="flex flex-wrap gap-2 mt-6">
-            {study.stack.map((tech) => (
+        <Reveal delay={0.1}>
+          <div className="mb-16">
+            <div className="flex items-center gap-3 mb-4">
               <span
-                key={tech}
-                className="text-xs font-mono px-3 py-1 rounded-lg"
+                className="font-mono text-xs tracking-widest uppercase px-3 py-1 rounded-full"
                 style={{
-                  backgroundColor: "var(--bg-elevated)",
+                  backgroundColor: `${study.color}15`,
                   color: study.color,
                   border: `1px solid ${study.color}30`,
                 }}
               >
-                {tech}
+                {study.category.replace("_", " & ")}
               </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Sections */}
-        {[
-          { title: "Problem Statement", content: study.problem, color: "#ef4444" },
-          { title: "Hypothesis", content: study.hypothesis, color: study.color },
-          { title: "Results", content: study.results, color: "#10b981" },
-        ].map((section, i) => (
-          <motion.div
-            key={section.title}
-            className="mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <h2
-              className="font-mono text-xs tracking-widest uppercase mb-4"
-              style={{ color: section.color }}
+              <span className="font-mono text-xs" style={{ color: "var(--text-muted)" }}>
+                {study.stack.length} technologies
+              </span>
+            </div>
+            <h1
+              className="font-display text-4xl font-bold tracking-tight md:text-6xl"
+              style={{ color: "var(--text)" }}
             >
-              {section.title}
+              {study.title}
+            </h1>
+            <p className="mt-4 text-xl" style={{ color: "var(--text-muted)" }}>
+              {study.tagline}
+            </p>
+            <div className="flex flex-wrap gap-2 mt-6">
+              {study.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="text-xs font-mono px-3 py-1 rounded-lg"
+                  style={{
+                    backgroundColor: "var(--bg-elevated)",
+                    color: study.color,
+                    border: `1px solid ${study.color}30`,
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Problem */}
+        <Reveal delay={0.15}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: "#ef4444" }}>
+              Problem
             </h2>
             <p className="text-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              {section.content}
+              {study.problem}
             </p>
-          </motion.div>
-        ))}
+          </section>
+        </Reveal>
 
-        {/* Observations */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: study.color }}
-          >
-            Observations
-          </h2>
-          <div className="space-y-3">
-            {study.observations.map((obs, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-xl border p-4"
-                style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-surface)" }}
-              >
-                <span className="font-mono text-xs" style={{ color: study.color }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>{obs}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        {/* Idea */}
+        <Reveal delay={0.2}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: study.color }}>
+              Idea
+            </h2>
+            <p className="text-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              {study.idea}
+            </p>
+          </section>
+        </Reveal>
+
+        {/* Solution */}
+        <Reveal delay={0.25}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: "var(--signal)" }}>
+              Solution
+            </h2>
+            <p className="text-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              {study.solution}
+            </p>
+          </section>
+        </Reveal>
 
         {/* Architecture */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-6"
-            style={{ color: study.color }}
-          >
-            Architecture
-          </h2>
-          <ArchitecturalDiagram components={study.architecture} color={study.color} />
-        </motion.div>
+        <Reveal delay={0.3}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-6" style={{ color: study.color }}>
+              Architecture
+            </h2>
+            <ArchitecturalDiagram components={study.architecture} color={study.color} />
+          </section>
+        </Reveal>
 
-        {/* Experiments */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: study.color }}
-          >
-            Controlled Experiments
-          </h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            {study.experiments.map((exp) => (
-              <div
-                key={exp.name}
-                className="rounded-xl border p-5"
-                style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-surface)" }}
-              >
-                <h4 className="font-display text-sm font-bold mb-2" style={{ color: "var(--text)" }}>
-                  {exp.name}
-                </h4>
-                <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>{exp.result}</p>
-                <span
-                  className="font-mono text-lg font-bold"
-                  style={{ color: study.color }}
+        {/* Workflow */}
+        <Reveal delay={0.35}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-6" style={{ color: study.color }}>
+              Workflow
+            </h2>
+            <div className="rounded-2xl border p-6" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-surface)" }}>
+              <WorkflowDiagram steps={study.workflow} color={study.color} />
+            </div>
+          </section>
+        </Reveal>
+
+        {/* Challenges */}
+        <Reveal delay={0.4}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: "#f59e0b" }}>
+              Challenges
+            </h2>
+            <div className="space-y-3">
+              {study.challenges.map((c, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border p-4"
+                  style={{ borderColor: "#f59e0b30", backgroundColor: "var(--bg-surface)" }}
                 >
-                  {exp.metric}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Decision Matrix */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: study.color }}
-          >
-            Decision Matrix
-          </h2>
-          <div className="space-y-4">
-            {study.decisions.map((d) => (
-              <div
-                key={d.decision}
-                className="rounded-xl border p-5"
-                style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-surface)" }}
-              >
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-display text-sm font-bold mb-1" style={{ color: study.color }}>
-                      {d.decision}
-                    </h4>
-                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                      Alternatives: {d.alternatives}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs mb-1" style={{ color: "var(--signal)" }}>
-                      Rationale: {d.rationale}
-                    </p>
-                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                      Trade-off: {d.tradeoff}
-                    </p>
-                  </div>
+                  <span className="text-amber-500 shrink-0">!</span>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{c}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
-        {/* Failures */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: "#ef4444" }}
-          >
-            Documented Failures
-          </h2>
-          <div className="space-y-3">
-            {study.failures.map((f, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-xl border p-4"
-                style={{ borderColor: "#ef444430", backgroundColor: "var(--bg-surface)" }}
-              >
-                <span className="text-red-500">✕</span>
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>{f}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        {/* Results */}
+        <Reveal delay={0.45}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: "var(--signal)" }}>
+              Results
+            </h2>
+            <div className="rounded-2xl border p-6" style={{ borderColor: "#10b98130", backgroundColor: "var(--bg-surface)" }}>
+              <p className="text-lg" style={{ color: "var(--text-muted)" }}>
+                {study.results}
+              </p>
+            </div>
+          </section>
+        </Reveal>
 
         {/* Lessons */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: "#10b981" }}
-          >
-            Lessons Learned
-          </h2>
-          <div className="space-y-3">
-            {study.lessons.map((l, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 rounded-xl border p-4"
-                style={{ borderColor: "#10b98130", backgroundColor: "var(--bg-surface)" }}
-              >
-                <span className="text-emerald-500">→</span>
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>{l}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <Reveal delay={0.5}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: study.color }}>
+              What I Learned
+            </h2>
+            <div className="space-y-3">
+              {study.lessons.map((l, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border p-4"
+                  style={{ borderColor: `${study.color}30`, backgroundColor: "var(--bg-surface)" }}
+                >
+                  <span style={{ color: study.color }}>→</span>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{l}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
         {/* Next Steps */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="font-mono text-xs tracking-widest uppercase mb-4"
-            style={{ color: study.color }}
-          >
-            Next Steps
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {study.nextSteps.map((step, i) => (
-              <span
-                key={i}
-                className="text-xs font-mono px-3 py-1.5 rounded-lg"
-                style={{
-                  backgroundColor: "var(--bg-elevated)",
-                  color: study.color,
-                  border: `1px solid ${study.color}30`,
-                }}
+        <Reveal delay={0.55}>
+          <section className="mb-16">
+            <h2 className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: "var(--text)" }}>
+              Next Steps
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {study.nextSteps.map((step, i) => (
+                <span
+                  key={i}
+                  className="text-xs font-mono px-3 py-1.5 rounded-lg"
+                  style={{
+                    backgroundColor: "var(--bg-elevated)",
+                    color: study.color,
+                    border: `1px solid ${study.color}30`,
+                  }}
+                >
+                  {step}
+                </span>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        {/* Links */}
+        <Reveal delay={0.6}>
+          <section className="mb-16">
+            <div className="flex gap-3">
+              {study.github ? (
+                <a
+                  href={study.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                  style={{ border: "1px solid var(--border-medium)", color: "var(--text)" }}
+                >
+                  View Code →
+                </a>
+              ) : (
+                <span className="px-6 py-2.5 rounded-xl text-sm font-mono" style={{ color: "var(--text-muted)", border: "1px solid var(--border)" }}>
+                  [GITHUB LINK]
+                </span>
+              )}
+              {study.demo ? (
+                <a
+                  href={study.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                  style={{ backgroundColor: study.color, color: "var(--bg)" }}
+                >
+                  Live Demo →
+                </a>
+              ) : (
+                <span className="px-6 py-2.5 rounded-xl text-sm font-mono" style={{ color: "var(--text-muted)", border: "1px solid var(--border)" }}>
+                  [DEMO LINK]
+                </span>
+              )}
+            </div>
+          </section>
+        </Reveal>
+
+        {/* Navigation */}
+        <Reveal delay={0.65}>
+          <div className="border-t pt-8 flex justify-between" style={{ borderColor: "var(--border)" }}>
+            {prevProject ? (
+              <Link
+                href={`/projects/${prevProject.slug}`}
+                className="group flex items-center gap-2"
+                style={{ color: "var(--text-muted)" }}
               >
-                {step}
-              </span>
-            ))}
+                <svg className="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <div>
+                  <p className="font-mono text-[10px] uppercase" style={{ color: "var(--text-muted)" }}>Previous</p>
+                  <p className="text-sm font-bold" style={{ color: "var(--text)" }}>{prevProject.title}</p>
+                </div>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {nextProject ? (
+              <Link
+                href={`/projects/${nextProject.slug}`}
+                className="group flex items-center gap-2 text-right"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <div>
+                  <p className="font-mono text-[10px] uppercase" style={{ color: "var(--text-muted)" }}>Next</p>
+                  <p className="text-sm font-bold" style={{ color: "var(--text)" }}>{nextProject.title}</p>
+                </div>
+                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : (
+              <div />
+            )}
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </div>
   );

@@ -2,11 +2,30 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { CustomCursor } from "@/animations/custom-cursor";
+import { PageTransition } from "@/animations/page-transition";
+import { SITE } from "@/data/content";
 
 export const metadata: Metadata = {
-  title: "Karan Sasane — Engineering Portfolio",
-  description:
-    "Personal digital experience and engineering portfolio of Karan Sasane. Systems thinker, problem solver, technical builder.",
+  title: SITE.title,
+  description: SITE.description,
+  openGraph: {
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+    siteName: SITE.name,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.title,
+    description: SITE.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -21,8 +40,12 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-body)" }}
       >
         <ThemeProvider>
+          <CustomCursor />
           <Header />
-          <main className="flex-1 pt-24">{children}</main>
+          <main className="flex-1">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

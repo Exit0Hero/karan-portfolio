@@ -4,71 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProjectUniverse } from "@/components/project-universe";
 import { ProjectCard } from "@/components/project-card";
+import { Reveal } from "@/animations/reveal";
+import { PROJECTS, type ProjectCategory } from "@/data/content";
 
-const PROJECTS = [
-  {
-    id: "schedulai",
-    title: "SchedulAI",
-    tagline: "AI-powered scheduling engine that optimizes team productivity through ML-based time allocation and conflict resolution.",
-    category: "AI_OPTIMIZATION",
-    stack: ["Python", "TensorFlow", "FastAPI", "PostgreSQL", "Redis"],
-    color: "#00f2fe",
-    problem: "Manual scheduling causes 23% productivity loss in teams. Existing tools lack intelligent conflict resolution.",
-    results: "40% reduction in scheduling conflicts, 15% improvement in team utilization.",
-  },
-  {
-    id: "minibiz-erp",
-    title: "MiniBiz ERP",
-    tagline: "Lightweight ERP system for SMBs with real-time inventory, invoicing, and analytics dashboard.",
-    category: "WEB_PLATFORMS",
-    stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Stripe"],
-    color: "#7000ff",
-    problem: "Small businesses struggle with fragmented tools for inventory, invoicing, and reporting.",
-    results: "Unified platform serving 50+ businesses, 60% faster invoice processing.",
-  },
-  {
-    id: "adaptiq",
-    title: "AdaptIQ",
-    tagline: "Adaptive learning platform that personalizes content delivery based on user comprehension patterns.",
-    category: "DATA_ML",
-    stack: ["React", "Python", "scikit-learn", "MongoDB", "D3.js"],
-    color: "#10b981",
-    problem: "One-size-fits-all education fails 67% of learners who need personalized pacing.",
-    results: "35% improvement in course completion rates, 2.1x faster knowledge retention.",
-  },
-  {
-    id: "netflix-system",
-    title: "Netflix Microservices",
-    tagline: "Distributed video streaming architecture with adaptive bitrate, CDN optimization, and fault tolerance.",
-    category: "SYSTEMS",
-    stack: ["Go", "gRPC", "Kubernetes", "Redis", "S3"],
-    color: "#f59e0b",
-    problem: "Monolithic video platforms can't scale to millions of concurrent streams with sub-second latency.",
-    results: "99.99% uptime, <100ms start latency, 10M+ concurrent streams supported.",
-  },
-  {
-    id: "neural-search",
-    title: "Neural Search",
-    tagline: "Semantic search engine using transformer embeddings for context-aware document retrieval.",
-    category: "AI_OPTIMIZATION",
-    stack: ["Python", "PyTorch", "Elasticsearch", "FastAPI", "Docker"],
-    color: "#00f2fe",
-    problem: "Keyword-based search misses 40% of relevant documents due to semantic gaps.",
-    results: "3.2x improvement in search relevance, 85% reduction in false positives.",
-  },
-  {
-    id: "dataflow",
-    title: "DataFlow Pipeline",
-    tagline: "Real-time data processing pipeline handling 1M+ events/second with exactly-once semantics.",
-    category: "DATA_ML",
-    stack: ["Apache Kafka", "Flink", "Scala", "AWS", "Terraform"],
-    color: "#10b981",
-    problem: "Batch processing creates 15-minute delays in analytics, making real-time decisions impossible.",
-    results: "Sub-second processing latency, 99.999% data delivery guarantee.",
-  },
-];
-
-const CATEGORIES = [
+const CATEGORIES: { id: ProjectCategory | "ALL"; label: string }[] = [
   { id: "ALL", label: "All Projects" },
   { id: "AI_OPTIMIZATION", label: "AI & Optimization" },
   { id: "SYSTEMS", label: "Systems" },
@@ -77,9 +16,9 @@ const CATEGORIES = [
 ];
 
 export default function ProjectsPage() {
-  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory | "ALL">("ALL");
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [view, setView] = useState<"3d" | "grid">("3d");
+  const [view, setView] = useState<"3d" | "grid">("grid");
 
   const filteredProjects = activeCategory === "ALL"
     ? PROJECTS
@@ -90,84 +29,61 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen px-6 py-32">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <p
-            className="font-mono text-xs tracking-widest uppercase"
-            style={{ color: "var(--accent)" }}
-          >
-            Project Universe
-          </p>
-          <h1
-            className="font-display mt-4 text-4xl font-bold tracking-tight md:text-6xl"
-            style={{ color: "var(--text)" }}
-          >
-            Engineering Work
-          </h1>
-          <p
-            className="mt-4 max-w-xl text-lg"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Evidence-based projects. Real code. Real results. Each project follows
-            the Scientific OS framework.
-          </p>
-        </motion.div>
+        <Reveal>
+          <div className="mb-16">
+            <p className="font-mono text-xs tracking-widest uppercase" style={{ color: "var(--accent)" }}>
+              Project Laboratory
+            </p>
+            <h1 className="font-display mt-4 text-4xl font-bold tracking-tight md:text-6xl" style={{ color: "var(--text)" }}>
+              Engineering Work
+            </h1>
+            <p className="mt-4 max-w-xl text-lg" style={{ color: "var(--text-muted)" }}>
+              Evidence-based projects. Real code. Real results. Each project follows
+              the Scientific OS framework.
+            </p>
+          </div>
+        </Reveal>
 
         {/* View Toggle + Filters */}
-        <motion.div
-          className="mb-8 flex flex-wrap items-center gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div
-            className="flex rounded-xl p-1"
-            style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border)" }}
-          >
-            <button
-              onClick={() => setView("3d")}
-              className="px-4 py-2 rounded-lg text-xs font-mono transition-all"
-              style={{
-                backgroundColor: view === "3d" ? "var(--accent)" : "transparent",
-                color: view === "3d" ? "var(--bg)" : "var(--text-muted)",
-              }}
+        <Reveal delay={0.1}>
+          <div className="mb-8 flex flex-wrap items-center gap-4">
+            <div
+              className="flex rounded-xl p-1"
+              style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border)" }}
             >
-              3D View
-            </button>
-            <button
-              onClick={() => setView("grid")}
-              className="px-4 py-2 rounded-lg text-xs font-mono transition-all"
-              style={{
-                backgroundColor: view === "grid" ? "var(--accent)" : "transparent",
-                color: view === "grid" ? "var(--bg)" : "var(--text-muted)",
-              }}
-            >
-              Grid
-            </button>
-          </div>
+              {(["grid", "3d"] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className="px-4 py-2 rounded-lg text-xs font-mono transition-all"
+                  style={{
+                    backgroundColor: view === v ? "var(--accent)" : "transparent",
+                    color: view === v ? "var(--bg)" : "var(--text-muted)",
+                  }}
+                >
+                  {v === "3d" ? "3D View" : "Grid"}
+                </button>
+              ))}
+            </div>
 
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all"
-                style={{
-                  backgroundColor: activeCategory === cat.id ? "var(--accent)" : "var(--bg-surface)",
-                  color: activeCategory === cat.id ? "var(--bg)" : "var(--text-muted)",
-                  border: `1px solid ${activeCategory === cat.id ? "var(--accent)" : "var(--border)"}`,
-                }}
-              >
-                {cat.label}
-              </button>
-            ))}
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all"
+                  style={{
+                    backgroundColor: activeCategory === cat.id ? "var(--accent)" : "var(--bg-surface)",
+                    color: activeCategory === cat.id ? "var(--bg)" : "var(--text-muted)",
+                    border: `1px solid ${activeCategory === cat.id ? "var(--accent)" : "var(--border)"}`,
+                  }}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </Reveal>
 
         {/* 3D Universe View */}
         <AnimatePresence mode="wait">
@@ -238,7 +154,6 @@ export default function ProjectsPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 30 }}
               >
-                {/* Glow */}
                 <div
                   className="absolute -top-20 -right-20 w-60 h-60 rounded-full blur-[100px]"
                   style={{ backgroundColor: selected.color, opacity: 0.15 }}
@@ -265,26 +180,16 @@ export default function ProjectsPage() {
                     </button>
                   </div>
 
-                  <h2
-                    className="font-display text-3xl font-bold mb-3"
-                    style={{ color: "var(--text)" }}
-                  >
+                  <h2 className="font-display text-3xl font-bold mb-3" style={{ color: "var(--text)" }}>
                     {selected.title}
                   </h2>
 
-                  <p
-                    className="text-sm mb-6 leading-relaxed"
-                    style={{ color: "var(--text-muted)" }}
-                  >
+                  <p className="text-sm mb-6 leading-relaxed" style={{ color: "var(--text-muted)" }}>
                     {selected.tagline}
                   </p>
 
-                  {/* Problem */}
                   <div className="mb-6">
-                    <h4
-                      className="font-mono text-xs tracking-widest uppercase mb-2"
-                      style={{ color: selected.color }}
-                    >
+                    <h4 className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: selected.color }}>
                       Problem
                     </h4>
                     <p className="text-sm" style={{ color: "var(--text-muted)" }}>
@@ -292,12 +197,8 @@ export default function ProjectsPage() {
                     </p>
                   </div>
 
-                  {/* Results */}
                   <div className="mb-6">
-                    <h4
-                      className="font-mono text-xs tracking-widest uppercase mb-2"
-                      style={{ color: "var(--signal)" }}
-                    >
+                    <h4 className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--signal)" }}>
                       Results
                     </h4>
                     <p className="text-sm" style={{ color: "var(--text-muted)" }}>
@@ -305,12 +206,8 @@ export default function ProjectsPage() {
                     </p>
                   </div>
 
-                  {/* Stack */}
                   <div className="mb-6">
-                    <h4
-                      className="font-mono text-xs tracking-widest uppercase mb-2"
-                      style={{ color: "var(--text)" }}
-                    >
+                    <h4 className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--text)" }}>
                       Tech Stack
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -330,30 +227,29 @@ export default function ProjectsPage() {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex gap-3">
                     <a
-                      href={`/projects/${selected.id}`}
+                      href={`/projects/${selected.slug}`}
                       className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                      style={{
-                        backgroundColor: selected.color,
-                        color: "var(--bg)",
-                      }}
+                      style={{ backgroundColor: selected.color, color: "var(--bg)" }}
                     >
                       Full Case Study
                     </a>
-                    <a
-                      href={`https://github.com/Exit0Hero`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                      style={{
-                        border: "1px solid var(--border-medium)",
-                        color: "var(--text)",
-                      }}
-                    >
-                      View Code
-                    </a>
+                    {selected.github ? (
+                      <a
+                        href={selected.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                        style={{ border: "1px solid var(--border-medium)", color: "var(--text)" }}
+                      >
+                        View Code
+                      </a>
+                    ) : (
+                      <span className="px-6 py-2.5 rounded-xl text-sm font-mono" style={{ color: "var(--text-muted)", border: "1px solid var(--border)" }}>
+                        [GITHUB]
+                      </span>
+                    )}
                   </div>
                 </div>
               </motion.div>
