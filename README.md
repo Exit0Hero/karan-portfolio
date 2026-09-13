@@ -2,6 +2,10 @@
 
 A Next.js portfolio showcasing case studies in AI/ML, cybersecurity, and full-stack development.
 
+## Portfolio Documentation
+
+- [Week 10 Capstone Deliverable](./WEEK10_CAPSTONE.md) - Portfolio continuity and workflow system documentation
+
 ## Case Studies
 
 Each case study follows the standardized three-beat structure for maximum clarity and impact:
